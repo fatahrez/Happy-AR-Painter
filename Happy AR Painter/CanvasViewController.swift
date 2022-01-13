@@ -151,6 +151,7 @@ class CanvasViewController: UIViewController, ARSCNViewDelegate {
           )
           let rotateForeverAction = SCNAction.repeatForever(rotateAction)
           brush.runAction(rotateForeverAction)
+          
         }
       } else {
         brush.geometry?.firstMaterial?.diffuse.contents = UIColor.lightGray
