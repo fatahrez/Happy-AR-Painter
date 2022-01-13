@@ -130,16 +130,35 @@ class CanvasViewController: UIViewController, ARSCNViewDelegate {
     // and checking the state of the “Paint” button, both of which
     // need to be done in the main queue.
     DispatchQueue.main.async {
+      self.eraseNodes(named: "cursor")
+      
+      let brush = self.createBrush(
+                                  brushShape: self.brushSettings.shape,
+                                  brushSize: self.brushSettings.size,
+                                  position: position
+      )
+      
 
       if self.paintButton.isHighlighted {
+        brush.geometry?.firstMaterial?.diffuse.contents = self.brushSettings.color
+        brush.geometry?.firstMaterial?.specular.contents = UIColor.white
 
         if self.brushSettings.isSpinning {
-
+          let rotateAction = SCNAction.rotate(
+                                              by: 2 * .pi,
+                                              around: SCNVector3(0, 1, 0),
+                                              duration: 2
+          )
+          let rotateForeverAction = SCNAction.repeatForever(rotateAction)
+          brush.runAction(rotateForeverAction)
         }
       } else {
-
+        brush.geometry?.firstMaterial?.diffuse.contents = UIColor.lightGray
+        brush.name = "cursor"
       }
-
+      
+      self.canvas.scene.rootNode.addChildNode(brush)
+      
     }
   }
 
